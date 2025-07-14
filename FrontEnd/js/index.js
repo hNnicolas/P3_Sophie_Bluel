@@ -120,16 +120,6 @@ if (localStorage.getItem("token")) {
     const changment = document.createElement("button");
     changment.type = "button";
 
-    const modification_changment = `
-     <p>publier les changements</p>  `;
-    changment.insertAdjacentHTML("beforeend", modification_changment);
-    changment.className = "publier";
-
-    changment.onclick = function() {};
-    const changements = document.getElementById("modify");
-    changements.appendChild(changment);
-
-
 } else {
     document.getElementById("btnLogin").innerHTML = "login";
 

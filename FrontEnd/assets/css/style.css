@@ -147,6 +147,7 @@ body {
     margin: auto;
     font-family: 'Work Sans';
     font-size: 14px;
+    background-color: #FFFEF8;
 }
 
 header {
@@ -294,3 +295,10 @@ input[type="submit"] {
     border-radius: 60px;
     cursor: pointer;
 }
+
+.footer-nav {
+    display: flex;
+    justify-content: flex-end;
+    background-color: #FFFFFF;
+  }
+  

@@ -304,8 +304,8 @@ if (localStorage.getItem("token")) {
     const modifier = `
   
   <div id= "modifier">
-    <i class="fa-regular fa-pen-to-square"></i>
-    <p>modifier</p>
+ 
+
   </div>`;
     // Création d'un modèle de boîte de dialogue pour la modification
     const updates = `
@@ -318,6 +318,6 @@ if (localStorage.getItem("token")) {
     document.getElementById("updates").insertAdjacentHTML("afterbegin", updates);
 
     document.getElementById("intro").insertAdjacentHTML("afterbegin", modifier);
-    document.getElementById("introduction_photo").insertAdjacentHTML("beforeend", modifier);
+
 
 }
