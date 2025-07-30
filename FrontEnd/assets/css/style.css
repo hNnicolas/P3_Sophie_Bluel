@@ -141,11 +141,19 @@ table {
 /** end reset css**/
 
 body {
-  max-width: 1140px;
-  margin: auto;
   font-family: "Work Sans";
   font-size: 14px;
   background-color: #fffef8;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.wrapper {
+  max-width: 1140px;
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
 }
 
 header {
@@ -178,6 +186,7 @@ h2 {
   font-weight: 700;
   font-size: 30px;
   color: #1d6154;
+  padding-bottom: 40px;
 }
 
 nav ul {
@@ -293,7 +302,25 @@ input[type="submit"] {
 }
 
 .footer-nav {
+  width: 100vw;
+  background-color: #ffffff;
+}
+
+.footer-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 20px;
   display: flex;
   justify-content: flex-end;
-  background-color: #ffffff;
+}
+
+.footer-container ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-container li {
+  font-size: 1.2em;
 }

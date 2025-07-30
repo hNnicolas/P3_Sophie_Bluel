@@ -55,15 +55,27 @@
 #flexTitre {
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
-  gap: 8px;
+  justify-content: center; /* ou flex-start selon ton design */
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
-#portfolio_titre,
-#updates {
+#portfolio_titre {
   display: flex;
   flex-direction: column;
+}
+
+#updates {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
 }
 
 #btn {
