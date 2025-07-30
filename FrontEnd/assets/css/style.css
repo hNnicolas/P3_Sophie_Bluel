@@ -162,6 +162,17 @@ header {
   margin: 50px 0;
 }
 
+.login-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 10vw;
+}
+
+.login-header h1 {
+  font-size: 1.8rem;
+}
+
 section {
   margin: 50px 0;
 }
@@ -304,23 +315,13 @@ input[type="submit"] {
 .footer-nav {
   width: 100vw;
   background-color: #ffffff;
-}
-
-.footer-container {
-  max-width: 1140px;
-  margin: 0 auto;
   padding: 20px;
   display: flex;
   justify-content: flex-end;
+  padding: 1rem 4vw;
 }
 
-.footer-container ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.footer-container li {
-  font-size: 1.2em;
+.footer-nav .mentions {
+  margin-right: 150px;
+  padding-left: 10vw;
 }
