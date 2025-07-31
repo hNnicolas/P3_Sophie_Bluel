@@ -25,7 +25,7 @@ form.addEventListener("submit", (event) => {
         response.json().then((data) => {
           // Store user login information in LocalStorage
           localStorage.setItem("token", data.token);
-          localStorage.setItem("userId", data.userId);
+          // localStorage.setItem("userId", data.userId);
           // Redirect to home page
           window.location.href = "./index.html";
         });
