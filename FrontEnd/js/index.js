@@ -34,6 +34,9 @@ async function displayCategories() {
   const categories = await getCategories();
   allCategories.push(...categories); // Ajoute toutes les catégories récupérées
   displayFilter();
+
+  // Charge tous les projets une seule fois après avoir les catégories,
+  allProjects = await getWorks();
 }
 
 // Génère dynamiquement les boutons de filtre
@@ -100,4 +103,3 @@ document.getElementById("btnLogin").addEventListener("click", deconnexion);
 
 // Initialisation du projet
 displayCategories();
-displayAll();
