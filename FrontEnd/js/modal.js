@@ -110,7 +110,7 @@ function telecharger() {
 function addWorkToGallery(work) {
   const gallery = document.getElementById("gallery");
   const figure = document.createElement("figure");
-  figure.setAttribute("id", work.id);
+  figure.setAttribute("id", "A" + work.id);
 
   const img = document.createElement("img");
   img.src = work.imageUrl;
@@ -164,6 +164,12 @@ button.addEventListener("click", async (e) => {
           addWorkToGallery(requete);
           document.querySelector(".galleryModal").innerHTML = "";
           displayAllModal(allProjects);
+
+          // --- Ajout important ---
+          // On remet la modale en mode galerie principale (pas le formulaire d'ajout)
+          content.style.display = "block"; // Affiche la galerie
+          content2.style.display = "none"; // Cache le formulaire d'ajout
+          modal.style.display = "block"; // S'assure que la modale est visible
         }
       } else {
         document.getElementById("Error").textContent =
