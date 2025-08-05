@@ -29,9 +29,11 @@ window.onclick = function (event) {
 
 // Fonction d’affichage de la modale et des projets
 function showModal() {
+  const update = document.getElementById("updates");
   update.addEventListener("click", async (e) => {
     e.preventDefault();
-    allProjects = await getWorks(); // Récupération des projets
+    let allProjects = await getWorks(); // Récupération des projets
+    const modal = document.getElementById("modal");
     modal.style.display = "block";
     displayAllModal(allProjects); // Affichage des projets dans la modale
   });
@@ -48,9 +50,11 @@ function displayProject(work) {
 }
 
 // Affiche tous les projets dans la galerie modale
-function displayAllModal(projects) {
+function displayAllModal(allProjects) {
   document.querySelector(".galleryModal").innerHTML = "";
-  projects.forEach(displayProject);
+  for (let j = 0; j <= allProjects.length - 1; j++) {
+    displayProject(allProjects[j]);
+  }
 }
 
 // Navigation entre les vues modale (ajout de photo)
@@ -59,17 +63,18 @@ const content = document.getElementById("modal-content");
 const content2 = document.getElementById("next-modal-container");
 const close2 = document.getElementById("close2");
 
-add.addEventListener("click", () => {
+add.addEventListener("click", function () {
   content.style.display = "none";
   content2.style.display = "block";
 });
 
-document.getElementById("back").addEventListener("click", () => {
+const back = document.getElementById("back");
+back.addEventListener("click", function () {
   content.style.display = "block";
   content2.style.display = "none";
 });
 
-close2.addEventListener("click", () => {
+close2.addEventListener("click", function () {
   modal.style.display = "none";
 });
 
@@ -84,15 +89,21 @@ async function deleteProject(id) {
 }
 
 // Écoute les clics sur les icônes poubelles
-document.addEventListener("click", (e) => {
+document.addEventListener("click", function (e) {
   if (e.target.classList.contains("fa-trash-can")) {
     deleteProject(e.target.id);
   }
 });
 
+const form = document.getElementById("form");
+const title = document.getElementById("title");
+const category = document.getElementById("category");
+const imageUrl = document.getElementById("imageUrl");
+const button = document.getElementById("submit");
+
 // Téléchargement de l’image dans le formulaire
 function telecharger() {
-  let telecharger_image = "";
+  var telecharger_image = "";
   const reader = new FileReader();
 
   reader.addEventListener("load", () => {
@@ -114,6 +125,7 @@ function addWorkToGallery(work) {
 
   const img = document.createElement("img");
   img.src = work.imageUrl;
+  img.alt = work.title;
 
   const caption = document.createElement("figcaption");
   caption.textContent = work.title;
@@ -122,67 +134,89 @@ function addWorkToGallery(work) {
   gallery.appendChild(figure);
 }
 
-// Événements liés au téléchargement d’image
-document.getElementById("imageUrl").addEventListener("change", telecharger);
+// Téléchargement image en cliquant sur "ajouter une photo"
 document.getElementById("adding").addEventListener("click", () => {
   document.getElementById("imageUrl").click();
 });
 
-// Envoi du projet à l’API
-const button = document.getElementById("submit");
-button.addEventListener("click", async (e) => {
+// Événement de changement de fichier (optionnel si tu veux prévisualiser)
+document.getElementById("imageUrl").addEventListener("change", telecharger);
+
+// Soumission du formulaire d'ajout
+document.getElementById("submit").addEventListener("click", async (e) => {
   e.preventDefault();
 
   const photo = document.getElementById("imageUrl");
   const title = document.getElementById("title");
   const category = document.getElementById("category");
+  const error = document.getElementById("Error");
 
-  if (!photo.value || !title.value || !category.value) {
-    document.getElementById("Error").textContent =
-      "Il faut remplir le formulaire.";
+  // Vérification du formulaire
+  if (!photo.files[0] || !title.value || !category.value) {
+    error.textContent = "Il faut remplir le formulaire.";
     return;
   }
 
-  document.getElementById("Error").textContent = "";
+  const image = photo.files[0];
 
-  const categories = await getCategories();
-
-  for (let i = 0; i < categories.length; i++) {
-    if (category.value === categories[i].name) {
-      const image = photo.files[0];
-      const token = localStorage.getItem("token");
-
-      if (image.size < 4 * 1048576) {
-        const formData = new FormData();
-        formData.append("image", image);
-        formData.append("title", title.value);
-        formData.append("category", categories[i].id);
-
-        const requete = await addWork(formData);
-        if (requete) {
-          allProjects.push(requete);
-          addWorkToGallery(requete);
-          document.querySelector(".galleryModal").innerHTML = "";
-          displayAllModal(allProjects);
-
-          // --- Ajout important ---
-          // On remet la modale en mode galerie principale (pas le formulaire d'ajout)
-          content.style.display = "block"; // Affiche la galerie
-          content2.style.display = "none"; // Cache le formulaire d'ajout
-          modal.style.display = "block"; // S'assure que la modale est visible
-        }
-      } else {
-        document.getElementById("Error").textContent =
-          "La taille de la photo est supérieure à 4 Mo.";
-        photo.value = null;
-        document.getElementById("ajout_container").style.display = null;
-        document.getElementById("image_telecharger_images").style.display =
-          "none";
-      }
-
-      supprime();
-    }
+  if (image.size > 4 * 1024 * 1024) {
+    error.textContent = "La taille de la photo est supérieure à 4 Mo.";
+    photo.value = null;
+    document.getElementById("ajout_container").style.display = null;
+    document.getElementById("image_telecharger_images").style.display = "none";
+    return;
   }
+
+  error.textContent = "";
+
+  // Récupérer les catégories pour trouver l'id correspondant
+  const categories = await getCategories();
+  const selectedCategory = categories.find(
+    (cat) => cat.name === category.value
+  );
+
+  if (!selectedCategory) {
+    error.textContent = "Catégorie invalide.";
+    return;
+  }
+
+  // Préparation des données
+  const formData = new FormData();
+  formData.append("image", image);
+  formData.append("title", title.value);
+  formData.append("category", selectedCategory.id);
+
+  // Envoi à l’API
+  const response = await addWork(formData);
+  if (response) {
+    // Recharger les projets depuis l'API
+    allProjects = await getWorks();
+
+    // Réactualiser la galerie principale
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+    allProjects.forEach(addWorkToGallery);
+
+    // Réactualiser la galerie modale
+    document.querySelector(".galleryModal").innerHTML = "";
+    displayAllModal(allProjects);
+
+    // Réinitialiser l’interface
+    document.getElementById("content").style.display = "block";
+    document.getElementById("content2").style.display = "none";
+    document.getElementById("modal").style.display = "block";
+
+    // Réinitialiser le formulaire
+    title.value = "";
+    category.selectedIndex = 0;
+    photo.value = null;
+    document.getElementById("image_telecharger_images").style.display = "none";
+    document.getElementById("ajout_container").style.display = null;
+  } else {
+    error.textContent = "Erreur lors de l’ajout du projet.";
+  }
+
+  supprime();
 });
 
 // Réinitialise le formulaire
